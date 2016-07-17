@@ -1,0 +1,41 @@
+apply plugin: 'maven'
+apply plugin: 'groovy'
+apply plugin: 'java-gradle-plugin'
+
+repositories {
+    maven {
+        url('http://localhost:10001/content/groups/public/')
+    }
+}
+
+dependencies {
+    compile gradleApi()
+    compile "org.springframework.boot:spring-boot-gradle-plugin:1.3.5.RELEASE"
+    compile 'com.bmuschko:gradle-docker-plugin:3.0.1'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.5.1'
+    testCompile(group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4') {
+        exclude module: 'groovy-all'
+    }
+}
+
+gradlePlugin {
+    plugins {
+        orbService {
+            id = "orb-service"
+            implementationClass = "com.kbhit.orangebox.OrbServicePluginApi"
+        }
+    }
+}
+
+group='com.kbhit.orangebox'
+version='1.2-SNAPSHOT'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'http://localhost:10001/content/repositories/internal-plugins/') {
+                authentication(userName: 'deployer', password: 'deployer')
+            }
+        }
+    }
+}
