@@ -17,11 +17,11 @@ class CreateDockerfileTaskCreator implements TaskCreator {
     Task createTaskFor(Project project) {
         project.task('createDockerfile', type: Dockerfile) {
             destFile = project.file("${extension.buildDir}/Dockerfile")
+            from 'java:8u91'
+            copyFile 'app.jar', '/app/app.jar'
             environmentVariable 'ORANGEBOX_CONFIG_SERVER_URI', extension.configServerUri
             environmentVariable 'ORANGEBOX_SERVICE_LOCATOR_SERVER_URI', extension.serviceLocatorUri
-            from 'java:8u91'
             exposePort 8080
-            copyFile 'app.jar', '/app/app.jar'
             workingDir '/app'
             defaultCommand 'java', '-jar', 'app.jar'
         }
