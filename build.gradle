@@ -3,6 +3,7 @@ apply plugin: 'java-gradle-plugin'
 apply plugin: 'maven-publish'
 
 repositories {
+    mavenCentral()
     maven {
         url('http://localhost:10001/content/groups/public/')
     }
