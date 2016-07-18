@@ -1,6 +1,6 @@
-apply plugin: 'maven'
 apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
+apply plugin: 'maven-publish'
 
 repositories {
     maven {
@@ -30,14 +30,24 @@ gradlePlugin {
 group='com.kbhit.orangebox'
 version='1.2-SNAPSHOT'
 
-uploadArchives {
+publishing {
+
     repositories {
-        mavenDeployer {
-            repository(url: 'http://localhost:10001/content/repositories/internal-plugins/') {
-                authentication(userName: 'deployer', password: 'deployer')
+        maven {
+            url 'http://localhost:10001/content/repositories/internal-plugins/'
+            credentials {
+                username = 'deployer'
+                password = 'deployer'
             }
         }
     }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
 }
 
 task wrapper(type: Wrapper) {
