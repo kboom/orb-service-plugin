@@ -46,47 +46,4 @@ class ServiceProjectFunctionalTest extends AbstractFunctionalTest {
         assertThat(new File(projectDir, 'build/docker/Dockerfile')).exists()
     }
 
-
-    def "buildImage task runs successfully"() {
-        given:
-        buildFile << """
-            plugins {
-                id 'orb-service'
-            }
-
-            orbService {
-                name = 'Test service'
-                version = '1.0'
-            }
-        """
-
-        def srcDir = new File(projectDir, 'src/main/java/test')
-        srcDir.mkdirs()
-        def mainClassFile = new File(srcDir, 'TestApplication.java')
-        mainClassFile.createNewFile()
-        mainClassFile << """
-            package test;
-
-            import org.springframework.context.annotation.Configuration;
-            import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-            @SpringBootApplication
-            @Configuration
-            public class TestApplication {
-
-                public static void main(String[] args) {
-                    SpringApplication.run(StorageApplication.class, args);
-                }
-
-            }
-        """
-
-        when:
-        build("buildImage")
-
-        then:
-        result.task(":buildImage").outcome == SUCCESS
-    }
-
-
 }
