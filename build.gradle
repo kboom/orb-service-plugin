@@ -1,12 +1,31 @@
-apply plugin: 'groovy'
-apply plugin: 'java-gradle-plugin'
-apply plugin: 'maven-publish'
+plugins {
+    id "com.jfrog.bintray" version "1.7"
+    id "groovy"
+    id "java-gradle-plugin"
+    id "maven-publish"
+}
+
+group='com.kbhit.orangebox'
+version='1.2-SNAPSHOT'
 
 repositories {
-    maven {
-        url('http://localhost:10001/content/groups/public/')
-    }
     mavenCentral()
+}
+
+bintray {
+    user = 'kboom'
+    key = '94818fa1c90d39a207aeebd7d4301b82146dedf4'
+    publications = ['pluginPublication']
+    pkg {
+        repo = 'gradle-plugins'
+        name = 'orb-service-plugin'
+        userOrg = 'kboom'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/kboom/orb-service-plugin'
+    }
+    version {
+        name = '1.0'
+    }
 }
 
 dependencies {
@@ -28,9 +47,6 @@ gradlePlugin {
     }
 }
 
-group='com.kbhit.orangebox'
-version='1.2-SNAPSHOT'
-
 publishing {
 
     repositories {
@@ -44,8 +60,11 @@ publishing {
     }
 
     publications {
-        mavenJava(MavenPublication) {
+        pluginPublication(MavenPublication) {
             from components.java
+            groupId 'com.kbhit.orangebox'
+            artifactId 'orb-service-plugin'
+            version '1.0'
         }
     }
 
